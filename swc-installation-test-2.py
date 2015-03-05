@@ -102,6 +102,35 @@ CHECKS = [
     'mayavi.mlab',
     ]
 
+# setup page.  Leave this alone to use the stock workshop template's
+# setup instructions, point at your workshop page to use your
+# workshop's setup instructions, or set to None to only link to the
+# upstream project's setup instructions.
+SETUP_URL = 'https://swcarpentry.github.io/workshop-template/'
+
+# setup ID scheme (e.g. map nano issue to "editor")
+SETUP_IDS = {  # list unpredictable IDs in this dict literal
+    ('Windows', '*', 'notepad++'): 'editor-windows',
+    ('Darwin', '*', 'textwrangler'): 'editor-macosx',
+    ('Darwin', '*', 'sublime-text'): 'editor-macosx',
+    ('Linux', '*', 'kate'): 'editor-linux',
+    }
+
+# add predictable {system}-{check} IDs to SETUP_IDS
+for check, check_id in [
+        ('nano', 'editor'),
+        ('bash', 'shell'),
+        ('git', 'git'),
+        ('python', 'python'),
+        ('sqlite3', 'sql'),
+        ]:
+    for system, system_id in [
+            ('Linux', 'linux'),
+            ('Darwin', 'macosx'),
+            ('Windows', 'windows'),
+            ]:
+        SETUP_IDS[(system, '*', check)] = '{0}-{1}'.format(check_id, system_id)
+
 CHECKER = {}
 
 _ROOT_PATH = _os.sep
@@ -119,7 +148,7 @@ class InvalidCheck (KeyError):
 
 
 class DependencyError (Exception):
-    _default_url = 'http://software-carpentry.org/setup/'
+    _default_url = SETUP_URL
     _setup_urls = {  # (system, version, package) glob pairs
         ('*', '*', 'Cython'): 'http://docs.cython.org/src/quickstart/install.html',
         ('Linux', '*', 'EasyMercurial'): 'http://easyhg.org/download.html#download-linux',
@@ -206,11 +235,19 @@ class DependencyError (Exception):
                 version = value[0]
                 break
         package = self.checker.name
+        urls = []
+        for (s,v,p),id in SETUP_IDS.items():
+            if (_fnmatch.fnmatch(system, s) and
+                    _fnmatch.fnmatch(version, v) and
+                    _fnmatch.fnmatch(package, p)):
+                urls.append('{0}#{1}'.format(SETUP_URL, id))
         for (s,v,p),url in self._setup_urls.items():
             if (_fnmatch.fnmatch(system, s) and
                     _fnmatch.fnmatch(version, v) and
                     _fnmatch.fnmatch(package, p)):
-                return [url]
+                urls.append(url)
+        if urls:
+            return urls
         return [self._default_url]
 
     def __str__(self):
