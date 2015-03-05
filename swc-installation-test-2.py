@@ -193,7 +193,7 @@ class DependencyError (Exception):
             causes = []
         self.causes = causes
 
-    def get_url(self):
+    def get_urls(self):
         system = _platform.system()
         version = None
         for pversion in (
@@ -210,17 +210,17 @@ class DependencyError (Exception):
             if (_fnmatch.fnmatch(system, s) and
                     _fnmatch.fnmatch(version, v) and
                     _fnmatch.fnmatch(package, p)):
-                return url
-        return self._default_url
+                return [url]
+        return [self._default_url]
 
     def __str__(self):
-        url = self.get_url()
+        urls = self.get_urls()
         lines = [
             'check for {0} failed:'.format(self.checker.full_name()),
             '  ' + self.message,
             '  For instructions on installing an up-to-date version, see',
-            '  ' + url,
             ]
+        lines.extend(['    {0}'.format(url) for url in urls])
         if self.causes:
             lines.append('  causes:')
             for cause in self.causes:
