@@ -118,6 +118,7 @@ CHECKS = [
     'sympy',
     'Cython',
     'networkx',
+    # 'mayavi.mlab',
     ]
 
 CHECKER = {}
@@ -167,6 +168,7 @@ class DependencyError (Exception):
         ('Darwin', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#building-on-osx',
         ('Windows', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#installing-on-windows',
         ('*', '*', 'matplotlib'): 'http://matplotlib.org/users/installing.html#installing',
+        # ('*', '*', 'mayavi.mlab'): 'http://docs.enthought.com/mayavi/mayavi/installation.html',
         ('*', '*', 'nano'): 'http://www.nano-editor.org/dist/latest/faq.html#3',
         ('*', '*', 'networkx'): 'http://networkx.github.com/documentation/latest/install.html#installing',
         ('*', '*', 'nose'): 'https://nose.readthedocs.org/en/latest/#installation-and-quick-start',
@@ -885,6 +887,7 @@ for package,name,long_name,minimum_version,and_dependencies in [
         ('sympy', None, 'SymPy', None, None),
         ('Cython', None, None, None, None),
         ('networkx', None, 'NetworkX', None, None),
+        # ('mayavi.mlab', None, 'MayaVi', None, None),
         ('setuptools', None, 'Setuptools', None, None),
         ]:
     if not name:
